@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html>
+
+    <head>
+        <title>Rango</title>
+        <link rel="stylesheet" href="{% static "css/base.css" %}" /> <!-- CSS -->
+        <script src="{% static "js/jquery.js" %}"></script> <!-- JavaScript -->
+    </head>
+
+    <body>
+        <h1>{{ category_name }}</h1>
+        {% if category %}
+        	{% if pages %}
+        	<ul>
+        		{% for page in pages %}
+        		<li><a href="{{ page.url }}">{{ page.title }} </a></li>
+        		{% endfor %}
+        	</ul>
+        	{% else %}
+        		<strong> There were no pages in this category </strong>
+        	{% endif %}
+        {% else %}
+        	<strong> There is no Category like this </strong>
+        {% endif %}
+         <a href="/rango/category/{{ category_name_url }}/add_page/" > Add a new Page </a>
+         <a href="/rango/about/">About</a>
+    </body>
+
+</html>
