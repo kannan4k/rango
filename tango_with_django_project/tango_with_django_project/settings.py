@@ -8,6 +8,8 @@ STATIC_PATH   = os.path.join(PROJECT_PATH, 'static')
 TEMPLATE_PATH = os.path.join(PROJECT_PATH, 'templates')
 DATABASE_PATH = os.path.join(PROJECT_PATH, 'rango.db')
 
+SESSION_COOKIE_AGE = 1209600 
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

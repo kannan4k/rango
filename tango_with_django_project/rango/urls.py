@@ -12,4 +12,5 @@ urlpatterns = patterns('',
         url(r'^category/(?P<category_name_url>\w+)/$', views.category, name='category'), # New!
         url(r'^restricted/', views.restricted, name='restricted'),
         url(r'^logout/', views.user_logout, name='user logout'),
+        url(r'^search/', views.search, name='search'),
         )

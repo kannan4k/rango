@@ -1,18 +1,12 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 
 {% load static %}
 
-<html>
+{% block title %}{{ user.username }}{% endblock %}
 
-    <head>
-        <title>Rango</title>
-        <link rel="stylesheet" href="{% static "css/base.css" %}" /> <!-- CSS -->
-        <script src="{% static "js/jquery.js" %}"></script> <!-- JavaScript -->
-    </head>
-
-    <body>
-        <h1>Profile Picture {{ boldmessage }}</h1>
+{% block body_block %}
+		<div class="hero-unit">
+        <h1>Profile Picture {{ visits }}</h1>
         <img src="{% static ''|add:boldmessage  %}  " alt="Picture of Rango" /> <!-- Images -->
-    </body>
-
-</html>
+        </div>
+{% endblock %}

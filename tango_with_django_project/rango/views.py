@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import logout
+from datetime import datetime
+from rango.bing_search import run_query
 
 def index(request):
 	context = RequestContext(request)
@@ -14,12 +16,36 @@ def index(request):
 	context_dict = {'categories':category_list}
 	for category in category_list:
 		category.url = category.name.replace(' ','_')
-	return render_to_response('rango/index.html',context_dict, context)
+	
+	page_list = Page.objects.order_by('-views')[:5]
+	context_dict['pages'] = page_list
+	
+	#### NEW CODE ####
+	if request.session.get('last_visit'):
+		# The session has a value for the last visit
+		last_visit_time = request.session.get('last_visit')
+		visits = request.session.get('visits', 0)
+
+		if (datetime.now() - datetime.strptime(last_visit_time[:-7], "%Y-%m-%d %H:%M:%S")).days > 0:
+			request.session['visits'] = visits + 1
+			request.session['last_visit'] = str(datetime.now())
+	else:
+		# The get returns None, and the session does not have a value for the last visit.
+		request.session['last_visit'] = str(datetime.now())
+		request.session['visits'] = 1
+	#### END NEW CODE ####
+	
+	return render_to_response('rango/index.html', context_dict, context)
 
 def about(request):
 	context = RequestContext(request)
-	context_dict = {'boldmessage':"kannan.jpg"}
-	return render_to_response('rango/about.html',context_dict, context)
+	if request.session.get('visits'):
+		count = request.session.get('visits')
+	else:
+		count = 0
+	context_dict = {'boldmessage':"kannan.jpg",'visits': count}
+	# remember to include the visit data
+	return render_to_response('rango/about.html', context_dict, context)
 
 def category(request, category_name_url):
 	# REquest our context from the request passed to us
@@ -36,7 +62,7 @@ def category(request, category_name_url):
 		pass
 	return render_to_response('rango/category.html', context_dict, context)
 		
-	
+@login_required	
 def add_category(request):
 	# Get the context
 	context = RequestContext(request)
@@ -52,6 +78,7 @@ def add_category(request):
 		form= CategoryForm()
 	return render_to_response('rango/add_category.html', {'form':form}, context)
 
+@login_required
 def add_page(request, category_name_url):
 	context = RequestContext(request)
 	category_name = category_name_url.replace('_',' ')
@@ -132,6 +159,21 @@ def user_logout(request):
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rango/')
 
+def search(request):
+	context = RequestContext(request)
+	result_list = []
+	
+	if request.method == 'POST':
+		query = request.POST['query'].strip()
+		
+		if query:
+			result_list = run_query(query)
+		
+	return render_to_response('rango/search.html', {'result_list':result_list}, context )
+			
+			
+		
+		
 
 
 
