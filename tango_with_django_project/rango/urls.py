@@ -12,5 +12,9 @@ urlpatterns = patterns('',
         url(r'^category/(?P<category_name_url>\w+)/$', views.category, name='category'), # New!
         url(r'^restricted/', views.restricted, name='restricted'),
         url(r'^logout/', views.user_logout, name='user logout'),
-        url(r'^search/', views.search, name='search'),
+        url(r'^profile/', views.profile, name='profile'),
+        url(r'^goto/', views.track_url, name='track_url'),
+        url(r'^like_category/$', views.like_category, name='like category'),
+        url(r'^suggest_category/$', views.suggest_category, name='suggest category'),
+        url(r'^auto_add_page/$', views.auto_add_page, name='add page from search'),
         )
